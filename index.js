@@ -7,6 +7,7 @@ const server = express();
 server.use(express.json());
 
 server.post("/api/users", (req, res) => {
+ // destructured request body data
  const { name, bio } = req.body;
  // chec if name or bio is missing in request body
  if (!name || !bio) {
@@ -39,6 +40,48 @@ server.get("/api/users", (req, res) => {
    res.status(500).json({
     errorMessage: "The users information could not be retrieved."
    });
+  });
+});
+
+// get a specific user from the db list
+server.get("/api/users/:id", (req, res) => {
+ users
+  //find user by unique id
+  .findById(req.params.id)
+  .then(user => {
+   // if user id is found return that user
+   if (user) {
+    res.status(200).json(user);
+   } else {
+    res
+     .status(404)
+     .json({ message: "The user with the specified ID does not exist." });
+   }
+  })
+  .catch(() => {
+   res
+    .status(500)
+    .json({ errorMessage: "The user information could not be retrieved." });
+  });
+});
+
+// delete a user from the list
+server.delete("/api/users/:id", (req, res) => {
+ users
+  .remove(req.params.id)
+  .then(user => {
+   if (user == user) {
+    res.status(200).json({
+     message: "the user was deleted."
+    });
+   } else {
+    res
+     .status(404)
+     .json({ message: "The user with the specified ID does not exist." });
+   }
+  })
+  .catch(() => {
+   res.status(500).json({ errorMessage: "The user could not be removed" });
   });
 });
 
