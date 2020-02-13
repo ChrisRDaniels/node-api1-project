@@ -85,6 +85,36 @@ server.delete("/api/users/:id", (req, res) => {
   });
 });
 
+// update a user in the list
+server.put("/api/users/:id", (req, res) => {
+ // destructured request body data
+ const { name, bio } = req.body;
+
+ if (!name || !bio) {
+  res
+   .status(400)
+   .json({ errorMessage: "Please provide name and bio for the user." });
+ } else {
+  users
+   // update matched ID with new request body for bio and name
+   .update(req.params.id, req.body)
+   .then(user => {
+    if (user) {
+     res.status(200).json(user);
+    } else {
+     res.status(404).json({
+      message: "The user with the specified ID does not exist."
+     });
+    }
+   })
+   .catch(() => {
+    res.status(500).json({
+     errorMessage: "The user information could not be modified."
+    });
+   });
+ }
+});
+
 const port = 5000;
 
 // start the server on localhost at port 5000
