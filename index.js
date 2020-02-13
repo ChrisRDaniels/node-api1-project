@@ -8,12 +8,13 @@ server.use(express.json());
 
 server.post("/api/users", (req, res) => {
  const { name, bio } = req.body;
-
+ // chec if name or bio is missing in request body
  if (!name || !bio) {
   res
    .status(400)
    .json({ errorMessage: "Please provide name and bio for the user." });
  } else {
+  //add new name user to db
   users
    .insert(req.body)
    .then(user => {
@@ -27,6 +28,7 @@ server.post("/api/users", (req, res) => {
  }
 });
 
+// get a list of all the db users
 server.get("/api/users", (req, res) => {
  users
   .find()
