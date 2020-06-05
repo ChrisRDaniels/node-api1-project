@@ -92,7 +92,7 @@ server.delete('/api/users/:id', (req, res) => {
 server.put('/api/users/:id', (req, res) => {
   // destructured request body data
   const { name, bio } = req.body;
-
+  const { id } = req.params;
   if (!name || !bio) {
     res
       .status(400)
@@ -100,7 +100,7 @@ server.put('/api/users/:id', (req, res) => {
   } else {
     users
       // update matched ID with new request body for bio and name
-      .update(req.params.id, req.body)
+      .update(id, req.body)
       .then((user) => {
         if (user) {
           res.status(200).json(user);
